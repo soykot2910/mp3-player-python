@@ -17,6 +17,13 @@ def add_song():
     song = filedialog.askopenfilename(initialdir='audio/', title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"), ))
     song_box.insert(END,song)
 
+def add_many_songs():
+    songs = filedialog.askopenfilenames(initialdir='audio/', title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"), ))
+    
+    for song in songs:
+        song_box.insert(END,song)
+
+
 def play():
     song=song_box.get(ACTIVE)
     print(song)
@@ -27,6 +34,22 @@ def play():
 def stop():
     pygame.mixer.music.stop()
     song_box.select_clear(ACTIVE)
+
+global paused
+paused=False
+
+def pause(is_paused):
+    global paused
+    paused=is_paused
+
+    if paused:
+         pygame.mixer.music.unpause()
+         paused=False
+    else:
+        pygame.mixer.music.pause()
+        paused=True
+
+    
 	
 
 song_box = Listbox(root, bg="black", fg="green", width=60, selectbackground="green", selectforeground="black")
@@ -48,7 +71,7 @@ controls_frame.pack()
 back_btn=Button(controls_frame,image=back_btn_img, borderwidth=0)
 forward_btn=Button(controls_frame,image=forward_btn_img, borderwidth=0)
 play_btn=Button(controls_frame,image=play_btn_img, borderwidth=0,command=play)
-pause_btn=Button(controls_frame,image=pause_btn_img, borderwidth=0)
+pause_btn=Button(controls_frame,image=pause_btn_img, borderwidth=0,command=lambda: pause(paused))
 stop_btn=Button(controls_frame,image=stop_btn_img, borderwidth=0,command=stop)
 
 back_btn.grid(row=0, column=0,padx=10)
@@ -64,6 +87,11 @@ root.config(menu=my_menu)
 # Add song menu
 add_song_menu=Menu(my_menu)
 my_menu.add_cascade(label="Add Songs",menu=add_song_menu)
-add_song_menu.add_command(label="Add  Song To Playlist",command=add_song)
+add_song_menu.add_command(label="Add  One Song To Playlist",command=add_song)
+
+# add many song
+add_song_menu.add_command(label="Add  Many Song To Playlist",command=add_many_songs)
+
+
 
 root.mainloop()
