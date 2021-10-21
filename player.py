@@ -24,9 +24,43 @@ def add_many_songs():
         song_box.insert(END,song)
 
 
+def next_song():
+    next_one=song_box.curselection()
+    next_one=next_one[0]+1
+    song=song_box.get(next_one)
+
+    pygame.mixer.music.load(song)
+    pygame.mixer.music.play(loops=0)
+ 
+    # clear active bar in playlist 
+    song_box.select_clear(0,END)
+
+    # Activate new song bar
+    song_box.activate(next_one)
+    
+    # set active bar to next song
+    song_box.select_set(next_one,last="None")
+
+def prev_song():
+     next_one=song_box.curselection()
+     next_one=next_one[0]-1
+     song=song_box.get(next_one)
+
+     pygame.mixer.music.load(song)
+     pygame.mixer.music.play(loops=0)
+    
+     # clear active bar in playlist 
+     song_box.select_clear(0,END)
+
+     # Activate new song bar
+     song_box.activate(next_one)
+        
+     # set active bar to next song
+     song_box.select_set(next_one,last="None")
+
+    
 def play():
     song=song_box.get(ACTIVE)
-    print(song)
 
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0)
@@ -68,8 +102,8 @@ controls_frame.pack()
 
 
 # Create player control button
-back_btn=Button(controls_frame,image=back_btn_img, borderwidth=0)
-forward_btn=Button(controls_frame,image=forward_btn_img, borderwidth=0)
+back_btn=Button(controls_frame,image=back_btn_img, borderwidth=0,command=prev_song)
+forward_btn=Button(controls_frame,image=forward_btn_img, borderwidth=0,command=next_song)
 play_btn=Button(controls_frame,image=play_btn_img, borderwidth=0,command=play)
 pause_btn=Button(controls_frame,image=pause_btn_img, borderwidth=0,command=lambda: pause(paused))
 stop_btn=Button(controls_frame,image=stop_btn_img, borderwidth=0,command=stop)
